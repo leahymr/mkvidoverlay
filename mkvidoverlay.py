@@ -27,6 +27,9 @@ def command_line_args() -> argparse:
                         action='store_true')
     parser.add_argument("-o", "--outfile",
                         help="output file name")
+    parser.add_argument("-c", "--color",
+                        help="background color (0-255 or rrggbb)",
+                        default="0")
     return(parser.parse_args())
 
 # https://stackoverflow.com/questions/2498875/how-to-invert-colors-of-image-with-pil-python-imaging
@@ -47,6 +50,26 @@ def invert(image: Image) -> Image:
 
     return(inverted_image)
 
+# Acceptable values for col
+#    col = "0"-"255" (string versions of integer values 0:255)
+#    col = "aabbcc"  (3 of 2 hex characters)
+#    col = "(aa,bb,cc)"  (tuple of three integers, 0:255)
+def parse_colors(col: str):
+    colors = 0
+    if col.isdigit() and len(col) <= 3:
+        colors = int(col)
+        colors = max(0, min(255, colors))
+    elif len(col) == 6:
+        # Check for invalid characters
+        badhex = [col[ch].lower() for ch in range(0,len(col))
+                     if col[ch].lower() not in "0 1 2 3 4 5 6 7 8 9 a b c d e f".split()]
+        if badhex == []:
+            # if none, then get the int equivalents of the hex characters
+            r,g,b = int(col[0:2],16),int(col[2:4],16),int(col[4:6],16)
+            colors = (r,g,b)
+    print(f'{colors=}')
+
+    return colors
 
 def main():
     args = command_line_args()
@@ -54,9 +77,10 @@ def main():
     with Image.open(args.filename) as image:
         inverted_image = invert(image)
 
+    color = parse_colors(args.color)
     bg = Image.new('RGBA',
                    size=inverted_image.size,
-                   color=0)
+                   color=color)
     bg.putalpha((100 - args.transparency) * 255 // 100)
 
     final = Image.alpha_composite(bg, inverted_image)
