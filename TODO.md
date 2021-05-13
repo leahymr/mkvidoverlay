@@ -5,3 +5,4 @@
 - Always generate .png output
 - Clean file paths
 - Handle errors when opening files
+- ~Specify background colors~
