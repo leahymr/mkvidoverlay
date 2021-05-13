@@ -124,7 +124,6 @@ def parse_colors_re(col: str):
                       min(int(match[5]),255))
     else:
         sys.stderr.write(f'Ignoring colors: {col}\n')
-    print(f'{colors=}')
 
     return colors
 
