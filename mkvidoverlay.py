@@ -31,8 +31,6 @@ logging.basicConfig(
             level=logging.DEBUG,
             format=' %(asctime)s - %(levelname)s - %(message)s')
 
-default_bg_transparency = 40 # percent
-
 
 def command_line_args() -> argparse:
     parser = argparse.ArgumentParser(
@@ -43,8 +41,8 @@ def command_line_args() -> argparse:
     parser.add_argument("-t", "--transparency",
                         type=int,
                         choices=range(0,101,10),
-                        default=default_bg_transparency,
-                        help="transparency of background")
+                        default=40,
+                        help="transparency of background (integer %)")
     parser.add_argument("-s", "--show",
                         help="display image",
                         action='store_true')
