@@ -80,6 +80,27 @@ def parse_colors(col: str):
 
     return colors
 
+def parse_colors_re(col: str):
+    colors = 0
+    match = re.search(r'^(\d{1,3})$|^([0-9a-f]{6})$|^\((\d{1,3}),(\d{1,3}),(\d{1,3})\)$',
+                        col)
+    if match:
+        if match[1] != None:
+            colors = max(0, min(255, int(col)))
+        elif match[2] != None:
+            colors = (int(col[0:2],16),
+                      int(col[2:4],16),
+                      int(col[4:6],16))
+        else:
+            colors = (min(int(match[3]),255),
+                      min(int(match[4]),255),
+                      min(int(match[5]),255))
+    else:
+        sys.stderr.write(f'Ignoring colors: {col}\n')
+    print(f'{colors=}')
+
+    return colors
+
 def main():
     args = command_line_args()
 
