@@ -65,8 +65,12 @@ def parse_colors(col: str):
                      if col[ch].lower() not in "0 1 2 3 4 5 6 7 8 9 a b c d e f".split()]
         if badhex == []:
             # if none, then get the int equivalents of the hex characters
-            r,g,b = int(col[0:2],16),int(col[2:4],16),int(col[4:6],16)
+            r,g,b = int(col[0:2],16), int(col[2:4],16), int(col[4:6],16)
             colors = (r,g,b)
+        else:
+            sys.stderr.write(f'Invalid hex colors: {col}\n')
+    else:
+        sys.stderr.write(f'Ignoring colors: {col}\n')
     print(f'{colors=}')
 
     return colors
