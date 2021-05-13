@@ -69,6 +69,11 @@ def parse_colors(col: str):
             colors = (r,g,b)
         else:
             sys.stderr.write(f'Invalid hex colors: {col}\n')
+    elif col[0] == '(' and col[-1] == ')':
+        r,g,b = col[1:-1].split(',')
+        colors = (min(int(r),255),
+                  min(int(g),255),
+                  min(int(b),255))
     else:
         sys.stderr.write(f'Ignoring colors: {col}\n')
     print(f'{colors=}')
