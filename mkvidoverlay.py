@@ -28,7 +28,10 @@ def command_line_args() -> argparse:
     parser.add_argument("-o", "--outfile",
                         help="output file name")
     parser.add_argument("-c", "--color",
-                        help="background color (0-255 or rrggbb)",
+                        help="background color;"
+                             " option 1: 0-255;"
+                             " option 2: rrggbb (3 pairs of 2 hex digits);"
+                             " option 3: '(rr,gg,bb)' (3 pairs of 2 ints, 0-255)",
                         default="0")
     return(parser.parse_args())
 
