@@ -58,7 +58,14 @@ def command_line_args() -> argparse:
                              " option 2: rrggbb (3 pairs of 2 hex digits);"
                              " option 3: '(rr,gg,bb)' (3 pairs of 2 ints, 0-255)",
                         default="0")
-    return(parser.parse_args())
+    args = parser.parse_args()
+
+    # Catch an invalid combination of arguments
+    if (args.outpath == None or args.outpath == '') and args.append == '':
+        sys.stderr.write("Error: --append cannot be '' if --outpath is not specified.\n")
+        sys.exit(3)
+
+    return(args)
 
 
 # https://stackoverflow.com/questions/2498875/how-to-invert-colors-of-image-with-pil-python-imaging
@@ -142,9 +149,6 @@ class TestNewFunc(unittest.TestCase):
 
 def main():
     args = command_line_args()
-    if (args.outpath == None or args.outpath == '') and args.append == '':
-        sys.stderr.write("Error: --append cannot be '' if --outpath is not specified.\n")
-        sys.exit(3)
 
     for file in args.filename:
         try:
