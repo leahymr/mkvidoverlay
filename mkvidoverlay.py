@@ -141,25 +141,41 @@ def main():
     args = command_line_args()
 
     for file in args.filename:
-        with Image.open(file) as image:
-            inverted_image = invert(image)
+        try:
+            file = os.path.abspath(file)
+            # Errors will be caught by the try, and the rest of the routine will be skipped
+            with Image.open(file) as image:
+                inverted_image = invert(image)
 
-        color = parse_colors(args.color)
-        bg = Image.new('RGBA',
-                       size=inverted_image.size,
-                       color=color)
-        bg.putalpha((100 - args.transparency) * 255 // 100)
+            color = parse_colors(args.color)
+            bg = Image.new('RGBA',
+                           size=inverted_image.size,
+                           color=color)
+            bg.putalpha((100 - args.transparency) * 255 // 100)
 
-        final = Image.alpha_composite(bg, inverted_image)
-        if args.show:
-            final.show()
+            final = Image.alpha_composite(bg, inverted_image)
+            if args.show:
+                final.show()
 
-        if args.outfile:
-            outfile = args.outfile
-        else:
-            (fn, ext) = os.path.splitext(file)
-            outfile = fn+'-out'+ext
-        final.save(outfile)
+            if args.outfile:
+                outfile = args.outfile
+            else:
+                (fn, ext) = os.path.splitext(file)
+                outfile = fn+'-out'+ext
+
+            # Special try for writing the file
+            try:
+                final.save(outfile)
+            except PermissionError as err:
+                print(f"Can't write file: {err}")
+            except:
+                raise
+
+        except PermissionError as err:
+            print(f"Can't read file: {err}")
+        except:
+            print("Unexpected error:", sys.exc_info()[1])
+            sys.exit(2)
 
 
 if __name__ == '__main__':
