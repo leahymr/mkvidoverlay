@@ -103,7 +103,6 @@ def parse_colors(col: str):
                   min(int(b),255))
     else:
         sys.stderr.write(f'Ignoring colors: {col}\n')
-    print(f'{colors=}')
 
     return colors
 
