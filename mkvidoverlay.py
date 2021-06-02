@@ -43,7 +43,7 @@ def command_line_args() -> argparse:
                         type=int,
                         choices=range(0,101,10),
                         default=40,
-                        help="transparency of background (integer %)")
+                        help="transparency of background (integer %%)")
     parser.add_argument("-s", "--show",
                         help="display image",
                         action='store_true')
