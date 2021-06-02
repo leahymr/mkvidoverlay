@@ -103,10 +103,10 @@ def parse_colors(col: str):
                   min(int(b),255))
     else:
         sys.stderr.write(f'Ignoring colors: {col}\n')
-
+    logging.debug(f'{colors=}')
     return colors
 
-
+# Alternate implementation of parse_colors -- regular expression
 def parse_colors_re(col: str):
     colors = 0
     match = re.search(r'^(\d{1,3})$|^([0-9a-f]{6})$|^\((\d{1,3}),(\d{1,3}),(\d{1,3})\)$',
@@ -125,6 +125,7 @@ def parse_colors_re(col: str):
     else:
         sys.stderr.write(f'Ignoring colors: {col}\n')
 
+    logging.debug(f'{colors=}')
     return colors
 
 
