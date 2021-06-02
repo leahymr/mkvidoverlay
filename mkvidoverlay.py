@@ -49,6 +49,9 @@ def command_line_args() -> argparse:
                         action='store_true')
     parser.add_argument("-o", "--outpath",
                         help="output path name")
+    parser.add_argument("-a", "--append",
+                        help="append to output file name",
+                        default="out")
     parser.add_argument("-c", "--color",
                         help="background color;"
                              " option 1: 0-255;"
@@ -139,6 +142,9 @@ class TestNewFunc(unittest.TestCase):
 
 def main():
     args = command_line_args()
+    if (args.outpath == None or args.outpath == '') and args.append == '':
+        sys.stderr.write("Error: --append cannot be '' if --outpath is not specified.\n")
+        sys.exit(3)
 
     for file in args.filename:
         try:
@@ -161,9 +167,17 @@ def main():
             # folder if necessary
             (path, fn) = os.path.split(file)
             (fn, ext) = os.path.splitext(fn)
-            outfile = fn+'-out'+ext
+            logging.debug(f'{path=}, {fn=}, {args.append=}, {ext=}')
+            if args.append:
+                outfile = fn+'-'+args.append+ext
+            else:
+                outfile = fn+ext
             if args.outpath:
-                outfile = os.path.join(args.outpath, outfile)
+                logging.debug(f'{args.outpath=}')
+                outfile = os.path.abspath(
+                            os.path.expanduser(
+                                os.path.join(args.outpath, outfile)))
+                logging.debug(f'{outfile=}')
 
             # Special try for writing the file
             try:
