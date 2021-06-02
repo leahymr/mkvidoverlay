@@ -47,8 +47,8 @@ def command_line_args() -> argparse:
     parser.add_argument("-s", "--show",
                         help="display image",
                         action='store_true')
-    parser.add_argument("-o", "--outfile",
-                        help="output file name")
+    parser.add_argument("-o", "--outpath",
+                        help="output path name")
     parser.add_argument("-c", "--color",
                         help="background color;"
                              " option 1: 0-255;"
@@ -157,11 +157,13 @@ def main():
             if args.show:
                 final.show()
 
-            if args.outfile:
-                outfile = args.outfile
-            else:
-                (fn, ext) = os.path.splitext(file)
-                outfile = fn+'-out'+ext
+            # Break apart the file name and prepare to save the file in a different
+            # folder if necessary
+            (path, fn) = os.path.split(file)
+            (fn, ext) = os.path.splitext(fn)
+            outfile = fn+'-out'+ext
+            if args.outpath:
+                outfile = os.path.join(args.outpath, outfile)
 
             # Special try for writing the file
             try:
