@@ -37,7 +37,8 @@ def command_line_args() -> argparse:
                 description="Invert an image and add a black background "
                             "that has TRANSPARENCY% of transparency")
     parser.add_argument("filename",
-                        help="path to image file")
+                        nargs='+',
+                        help="image file(s)")
     parser.add_argument("-t", "--transparency",
                         type=int,
                         choices=range(0,101,10),
@@ -139,25 +140,26 @@ class TestNewFunc(unittest.TestCase):
 def main():
     args = command_line_args()
 
-    with Image.open(args.filename) as image:
-        inverted_image = invert(image)
+    for file in args.filename:
+        with Image.open(file) as image:
+            inverted_image = invert(image)
 
-    color = parse_colors(args.color)
-    bg = Image.new('RGBA',
-                   size=inverted_image.size,
-                   color=color)
-    bg.putalpha((100 - args.transparency) * 255 // 100)
+        color = parse_colors(args.color)
+        bg = Image.new('RGBA',
+                       size=inverted_image.size,
+                       color=color)
+        bg.putalpha((100 - args.transparency) * 255 // 100)
 
-    final = Image.alpha_composite(bg, inverted_image)
-    if args.show:
-        final.show()
+        final = Image.alpha_composite(bg, inverted_image)
+        if args.show:
+            final.show()
 
-    if args.outfile:
-        outfile = args.outfile
-    else:
-        (fn, ext) = os.path.splitext(args.filename)
-        outfile = fn+'-out'+ext
-    final.save(outfile)
+        if args.outfile:
+            outfile = args.outfile
+        else:
+            (fn, ext) = os.path.splitext(file)
+            outfile = fn+'-out'+ext
+        final.save(outfile)
 
 
 if __name__ == '__main__':
