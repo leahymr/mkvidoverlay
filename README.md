@@ -7,6 +7,10 @@ and add a black background (60% transparent).
 The resulting graphic (.png) would be used as an overlay for streaming video
 broadcasts.
 
+## Requirement
+Must install the Pillow module. \
+*pip install PIL*
+
 ## Syntax
 **mkvidoverlay.py** \
         **[-h|--help]** # help message \
